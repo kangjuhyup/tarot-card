@@ -45,44 +45,47 @@ const CardWrapper = styled.div`
 
 export interface Cardprops {
   num: number;
+  isForward: boolean;
   zIndex: number;
   isShuffling: boolean;
   cardStyle: React.CSSProperties;
-  clickHandler: (num: number) => boolean;
+  clickHandler: (num: number) => { isClicked: boolean; isForward: boolean };
 }
-const Card = ({
-  num,
-  zIndex,
-  isShuffling,
-  cardStyle,
-  clickHandler,
-}: Cardprops) => {
-  const [zIdx, setZIdx] = useState(0);
-  const [background, setBackground] = useState("/images/tarot_back.jpeg");
-  const clickCard = (num: number) => {
-    const isPick = clickHandler(num);
-    if (isPick) {
-      setBackground(`/images/tarot/${num}.jpeg`);
-      setZIdx(1000);
-    }
-  };
-  useEffect(() => {
-    setZIdx(zIdx);
-  }, [zIdx]);
+const Card = React.memo(
+  ({ num, isForward, isShuffling, cardStyle, clickHandler }: Cardprops) => {
+    const [zIdx, setZIdx] = useState(0);
+    const [isPicked, setPicked] = useState(false);
+    const [background, setBackground] = useState("/images/tarot_back.jpeg");
+    const clickCard = (num: number) => {
+      const { isClicked } = clickHandler(num);
+      if (isClicked) {
+        if (isForward) {
+          setBackground(`/images/tarot/${num}.jpeg`);
+        } else {
+          setBackground(`/images/tarot/tarot180/${num}.jpeg`);
+        }
+        setPicked(true);
+        setZIdx(1000);
+      }
+    };
 
-  return (
-    <CardWrapper
-      className={`card ${isShuffling ? "shuffle" : ""}`}
-      style={{
-        zIndex: `${zIdx}`,
-        ...cardStyle,
-        backgroundImage: `url(${background})`,
-      }}
-      onClick={() => {
-        clickCard(num);
-      }}
-    ></CardWrapper>
-  );
-};
+    useEffect(() => {
+      setZIdx(zIdx);
+    }, [zIdx]);
 
+    return (
+      <CardWrapper
+        className={`card ${isShuffling ? "shuffle" : ""}`}
+        style={{
+          zIndex: `${zIdx}`,
+          ...cardStyle,
+          backgroundImage: `url(${background})`,
+        }}
+        onClick={() => {
+          clickCard(num);
+        }}
+      ></CardWrapper>
+    );
+  }
+);
 export default Card;

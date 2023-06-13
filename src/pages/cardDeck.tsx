@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
+import { useEffect, useMemo, useState } from "react";
+import styled from "styled-components";
 import Card from "../components/card";
 
 const CardStack = styled.div`
@@ -9,26 +9,55 @@ const CardStack = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 600px) {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const ShuffleButtonGroup = styled.div`
+  position: relative;
+  width: 100vw;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ShuffleButton = styled.button`
-  margin-top: 16px;
-  padding: 8px 16px;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
   font-size: 16px;
-  position: absolute;
-  bottom: 0px;
+  bottom: 0;
+
+  @media (max-width: 600px) {
+    margin-top: 8px;
+    width: 100%;
+    position: static;
+  }
 `;
 
-const CardDeck = () => {
+const CardDeck = (props: { setDto: any }) => {
   const cardNum: number = 78;
+  const [type, setType] = useState<number>(0);
   const [cards, setCards] = useState<
-    { index: number; x: number; y: number; isPicked: boolean }[]
+    {
+      index: number;
+      x: number;
+      y: number;
+      isPicked: boolean;
+      isForward: boolean;
+    }[]
   >(() =>
     Array.from({ length: cardNum }, (_, index) => ({
       index: index,
       x: 0,
       y: 0,
       isPicked: false,
+      isForward: Math.random() < 0.5,
     }))
   );
 
@@ -38,12 +67,32 @@ const CardDeck = () => {
   );
 
   const [isShuffled, setIsShuffled] = useState<boolean>(false);
+  interface PickedCard {
+    num: number;
+    isForward: boolean;
+  }
+  const [pickedCard, setPickedCard] = useState<PickedCard[]>([]);
 
-  const [pickedCount, setPickedCount] = useState<number>(0);
+  const clickCard = (num: number) => {
+    if (pickedCard.length < 3) {
+      setCards((prevState) => {
+        const newState = [...prevState];
+        newState[num].isPicked = true;
+        return newState;
+      });
+      setPickedCard([
+        ...pickedCard,
+        { num: num, isForward: cards[num].isForward },
+      ]);
+      return { isClicked: true, isForward: false };
+    }
+    return { isClicked: false, isForward: false };
+  };
 
   const setShowCards = () => {
     const angleIncrement = (Math.PI * 1) / cardNum;
-    const radius = 200;
+    let radius: number;
+    window.innerWidth > 600 ? (radius = 200) : (radius = 100);
     const centerX = 0;
     const centerY = 0;
 
@@ -67,6 +116,7 @@ const CardDeck = () => {
           x,
           y,
           isPicked: false,
+          isForward: newState[index].isForward,
         };
         return newState;
       });
@@ -74,49 +124,14 @@ const CardDeck = () => {
     });
   };
 
-  const startShuffling = () => {
-    setClicked(true);
-    const shuffledCards = cards.slice().sort(() => Math.random() - 0.5);
-    setCards(shuffledCards);
-    for (let i = 0; i < cardNum / 2; i++) {
-      setTimeout(() => {
-        setIsShuffling((prevState) => {
-          const newState = [...prevState];
-          newState[i] = true;
-          return newState;
-        });
-      }, i * 200);
-    }
-
-    setTimeout(() => {
-      setShowCards();
-    }, (cardNum / 2) * 210);
-  };
-
-  const clickCard = (num: number) => {
-    if (pickedCount < 3) {
-      setCards((prevState) => {
-        const newState = [...prevState];
-        newState[num].isPicked = true;
-        return newState;
-      });
-      setPickedCount(pickedCount + 1);
-      return true;
-    }
-    return false;
-  };
-
-  useEffect(() => {
-    console.log(`isClicked : `, isClicked);
-  }, [isClicked]);
-
-  return (
-    <CardStack>
-      {cards.map((card, index) => (
+  const memoizedCards = useMemo(
+    () =>
+      cards.map((card, index) => (
         <Card
           key={index}
           num={index}
           zIndex={index}
+          isForward={card.isForward}
           isShuffling={isShuffling[card.index]}
           cardStyle={
             isShuffled
@@ -136,16 +151,77 @@ const CardDeck = () => {
           }
           clickHandler={clickCard}
         />
-      ))}
+      )),
+    [cards, isShuffling, isShuffled, cardNum]
+  );
+
+  const startShuffling = (type: number) => {
+    setClicked(true);
+    setType(type);
+    const shuffledCards = cards.slice().sort(() => Math.random() - 0.5);
+    setCards(shuffledCards);
+    for (let i = 0; i < cardNum / 2; i++) {
+      setTimeout(() => {
+        setIsShuffling((prevState) => {
+          const newState = [...prevState];
+          newState[i] = true;
+          return newState;
+        });
+      }, i * 200);
+    }
+
+    setTimeout(() => {
+      setShowCards();
+    }, (cardNum / 2) * 210);
+  };
+
+  useEffect(() => {
+    if (pickedCard.length === 3) {
+      props.setDto({
+        type_num: type,
+        first_card_num: pickedCard[0].num,
+        first_forward: pickedCard[0].isForward,
+        second_card_num: pickedCard[1].num,
+        second_forward: pickedCard[1].isForward,
+        third_card_num: pickedCard[2].num,
+        third_forward: pickedCard[2].isForward,
+      });
+    }
+  }, [pickedCard]);
+
+
+  return (
+    <CardStack>
+      {memoizedCards}
       {isClicked ? (
         <></>
       ) : (
-        <ShuffleButton
-          style={{ display: isClicked ? "none" : "visible" }}
-          onClick={startShuffling}
-        >
-          Shuffle
-        </ShuffleButton>
+        <ShuffleButtonGroup>
+          <ShuffleButton
+            style={{ display: isClicked ? "none" : "visible" }}
+            onClick={() => startShuffling(0)}
+          >
+            사랑
+          </ShuffleButton>
+          <ShuffleButton
+            style={{ display: isClicked ? "none" : "visible" }}
+            onClick={() => startShuffling(1)}
+          >
+            커리어
+          </ShuffleButton>
+          <ShuffleButton
+            style={{ display: isClicked ? "none" : "visible" }}
+            onClick={() => startShuffling(2)}
+          >
+            금전
+          </ShuffleButton>
+          <ShuffleButton
+            style={{ display: isClicked ? "none" : "visible" }}
+            onClick={() => startShuffling(3)}
+          >
+            건강
+          </ShuffleButton>
+        </ShuffleButtonGroup>
       )}
     </CardStack>
   );

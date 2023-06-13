@@ -1,6 +1,7 @@
+/* 일반 화면 스타일 */
 .App {
   height: 100vh;
-  width: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -8,8 +9,10 @@
 }
 
 .topHalf {
+  position: relative;
   flex: 1;
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   justify-content: center;
@@ -24,7 +27,6 @@
   justify-content: center;
   align-items: center;
 }
-
 
 .backSky {
   width: 100vw;
@@ -59,3 +61,15 @@
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
+
+/* 모바일 화면 스타일
+@media (max-width: 600px) {
+  .backSky {
+    height: 50vh;
+    
+  }
+  
+  .sky {
+    height: 50vw;
+  }
+} */
