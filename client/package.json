@@ -20,7 +20,7 @@
     "zustand": "^4.3.8"
   },
   "scripts": {
-    "upload": "scp -i $HOME/Downloads/tarot.pem -r $HOME/Documents/tarot-card/build ubuntu@ec2-54-146-159-121.compute-1.amazonaws.com:~/tarot-site",
+    "upload": "scp -i $HOME/Downloads/tarot.pem -r $HOME/Documents/tarot-card/client/build ubuntu@ec2-54-146-159-121.compute-1.amazonaws.com:~/tarot-site",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import CardController from "./contorller/card.controller";
 
 const shuffleAnimation = keyframes`
   0% {
@@ -53,33 +54,9 @@ export interface Cardprops {
   clickHandler: (num: number) => { isClicked: boolean; isForward: boolean };
 }
 const Card = React.memo(
-  ({ num, isForward, isShuffling, cardStyle, clickHandler, isRun,pickNum }: Cardprops) => {
-    const [zIdx, setZIdx] = useState(0);
-    const [isPicked, setPicked] = useState(false);
-    const [background, setBackground] = useState("/images/tarot_back.jpeg");
-    const clickCard = (num: number) => {
-      const { isClicked } = clickHandler(num);
-      if (isClicked) {
-        if (isForward) {
-          setBackground(`/images/tarot/${num}.jpeg`);
-        } else {
-          setBackground(`/images/tarot/tarot180/${num}.jpeg`);
-        }
-        setPicked(true);
-        setZIdx(1000);
-      }
-    };
-
-    useEffect(() => {
-      setZIdx(zIdx);
-    }, [zIdx]);
-
- 
-    useEffect(()=> {
-      if(isPicked) {
-        console.log(pickNum)
-      }
-    },[isRun]);
+  (props: Cardprops) => {
+    const { num,  isShuffling, cardStyle, } = props;
+    const { zIdx, background, clickCard } = CardController(props)
 
     return (
       <CardWrapper

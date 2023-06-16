@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import styled from "styled-components";
 import Card from "../components/card";
-import CardDeckController from "./controller/cardDeck";
+import ShuffleButton from "../components/shuffleButton";
+import CardDeckController from "./controller/cardDeck.controller";
 
 const CardStack = styled.div`
   position: relative;
@@ -17,29 +18,7 @@ const CardStack = styled.div`
   }
 `;
 
-const ShuffleButtonGroup = styled.div`
-  position: relative;
-  width: 100vw;
-  bottom: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
 
-const ShuffleButton = styled.button`
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  font-size: 16px;
-  bottom: 0;
-
-  @media (max-width: 600px) {
-    margin-top: 8px;
-    width: 100%;
-    position: static;
-  }
-`;
 
 const CardDeck = (props: { setDto: any }) => {
   const {
@@ -99,32 +78,7 @@ const CardDeck = (props: { setDto: any }) => {
       {isClicked ? (
         <></>
       ) : (
-        <ShuffleButtonGroup>
-          <ShuffleButton
-            style={{ display: isClicked ? "none" : "visible" }}
-            onClick={() => startShuffling(0)}
-          >
-            사랑
-          </ShuffleButton>
-          <ShuffleButton
-            style={{ display: isClicked ? "none" : "visible" }}
-            onClick={() => startShuffling(1)}
-          >
-            커리어
-          </ShuffleButton>
-          <ShuffleButton
-            style={{ display: isClicked ? "none" : "visible" }}
-            onClick={() => startShuffling(2)}
-          >
-            금전
-          </ShuffleButton>
-          <ShuffleButton
-            style={{ display: isClicked ? "none" : "visible" }}
-            onClick={() => startShuffling(3)}
-          >
-            건강
-          </ShuffleButton>
-        </ShuffleButtonGroup>
+        <ShuffleButton click={startShuffling} isClicked={isClicked}/>
       )}
     </CardStack>
   );

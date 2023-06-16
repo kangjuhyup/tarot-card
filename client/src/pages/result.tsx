@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { useInterval } from "../hooks/interval";
-import ResultController, { ResultProps } from "./controller/result";
+import styled from "styled-components";
+import ResultController, { ResultProps } from "./controller/result.controller";
 
 const ResultDiv = styled.div`
   position: relative;
@@ -45,15 +43,27 @@ const ResultP = styled.p`
 `;
 
 const Result = (props: ResultProps) => {
-  const { message } = ResultController(props);
+  const { round, message } = ResultController(props);
   return (
     <div>
-      {props.success ? (
+      {round === 0 ? (
         <ResultDiv>
-          <ResultP>{message}</ResultP>
+          <ResultP>어떤 점을 보고싶으신가요?</ResultP>
+        </ResultDiv>
+      ) : round === 1 ? (
+        <ResultDiv>
+          <ResultP>세장의 카드를 선택해주세요.</ResultP>
         </ResultDiv>
       ) : (
-        <div></div>
+        <div>
+          {props.success ? (
+            <ResultDiv>
+              <ResultP>{message}</ResultP>
+            </ResultDiv>
+          ) : (
+            <></>
+          )}
+        </div>
       )}
     </div>
   );

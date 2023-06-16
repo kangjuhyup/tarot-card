@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import useRoundStore from "../../store/round";
 
 interface PickedCard {
   num: number;
@@ -21,6 +22,7 @@ const cardNum: number = 78;
 const angleIncrement = (Math.PI * 1) / cardNum;
 
 const CardDeckController = (props: { setDto: any }) => {
+  const {setRound} = useRoundStore();
   const [isRun,setIsRun] = useState<boolean>(false);
   const [type, setType] = useState<number>(0);
   const [cards, setCards] = useState<Card[]>(() =>
@@ -83,6 +85,7 @@ const CardDeckController = (props: { setDto: any }) => {
         return newState;
       });
       setIsShuffled(true);
+      setRound(1);
     });
   };
 
@@ -108,19 +111,20 @@ const CardDeckController = (props: { setDto: any }) => {
 
   useEffect(() => {
     if (pickedCard.length === 3) {
-      // props.setDto({
-      //   type_num: type,
-      //   first_card_num: pickedCard[0].num,
-      //   first_forward: pickedCard[0].isForward,
-      //   second_card_num: pickedCard[1].num,
-      //   second_forward: pickedCard[1].isForward,
-      //   third_card_num: pickedCard[2].num,
-      //   third_forward: pickedCard[2].isForward,
-      // });
+      props.setDto({
+        type_num: type,
+        first_card_num: pickedCard[0].num,
+        first_forward: pickedCard[0].isForward,
+        second_card_num: pickedCard[1].num,
+        second_forward: pickedCard[1].isForward,
+        third_card_num: pickedCard[2].num,
+        third_forward: pickedCard[2].isForward,
+      });
      
       setTimeout(() => {
         setIsRun(true);
       },500);
+      setRound(2);
     }
   }, [pickedCard]);
 

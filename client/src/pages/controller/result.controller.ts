@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useInterval } from "../../hooks/interval";
+import useRoundStore from "../../store/round";
 
 export interface ResultProps {
   success: boolean;
@@ -8,6 +9,7 @@ export interface ResultProps {
 
 const ResultController = (props: ResultProps) => {
   const { success, result } = props;
+  const { round } = useRoundStore();
   const [message, setMessage] = useState<string>("");
   const [count, setCount] = useState(0);
   useInterval(() => {
@@ -24,6 +26,8 @@ const ResultController = (props: ResultProps) => {
 
   return {
     message,
+    success,
+    round
   };
 };
 
