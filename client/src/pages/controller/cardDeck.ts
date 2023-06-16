@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 interface PickedCard {
   num: number;
   isForward: boolean;
+  x: number;
+  y: number;
 }
 
 interface Card {
@@ -10,12 +12,16 @@ interface Card {
   x: number;
   y: number;
   isPicked: boolean;
+  pickNum? : number;
   isForward: boolean;
 }
 
+
 const cardNum: number = 78;
+const angleIncrement = (Math.PI * 1) / cardNum;
 
 const CardDeckController = (props: { setDto: any }) => {
+  const [isRun,setIsRun] = useState<boolean>(false);
   const [type, setType] = useState<number>(0);
   const [cards, setCards] = useState<Card[]>(() =>
     Array.from({ length: cardNum }, (_, index) => ({
@@ -41,11 +47,12 @@ const CardDeckController = (props: { setDto: any }) => {
       setCards((prevState) => {
         const newState = [...prevState];
         newState[num].isPicked = true;
+        newState[num].pickNum = pickedCard.length
         return newState;
       });
       setPickedCard([
         ...pickedCard,
-        { num: num, isForward: cards[num].isForward },
+        { num: num, isForward: cards[num].isForward, x: cards[num].x, y: cards[num].y },
       ]);
       return { isClicked: true, isForward: false };
     }
@@ -53,16 +60,13 @@ const CardDeckController = (props: { setDto: any }) => {
   };
 
   const setShowCards = () => {
-    const angleIncrement = (Math.PI * 1) / cardNum;
     let radius: number;
     window.innerWidth > 600 ? (radius = 200) : (radius = 100);
-    const centerX = 0;
-    const centerY = 0;
 
     cards.forEach((_, index) => {
       const angle = index * angleIncrement;
-      const x = centerX + Math.cos(angle) * radius;
-      const y = centerY + Math.sin(angle) * radius;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
 
       setTimeout(() => {
         setIsShuffling((prevState) => {
@@ -74,13 +78,8 @@ const CardDeckController = (props: { setDto: any }) => {
 
       setCards((prevState) => {
         const newState = [...prevState];
-        newState[index] = {
-          index: newState[index].index,
-          x,
-          y,
-          isPicked: false,
-          isForward: newState[index].isForward,
-        };
+        newState[index].x = x;
+        newState[index].y = y;
         return newState;
       });
       setIsShuffled(true);
@@ -109,15 +108,19 @@ const CardDeckController = (props: { setDto: any }) => {
 
   useEffect(() => {
     if (pickedCard.length === 3) {
-      props.setDto({
-        type_num: type,
-        first_card_num: pickedCard[0].num,
-        first_forward: pickedCard[0].isForward,
-        second_card_num: pickedCard[1].num,
-        second_forward: pickedCard[1].isForward,
-        third_card_num: pickedCard[2].num,
-        third_forward: pickedCard[2].isForward,
-      });
+      // props.setDto({
+      //   type_num: type,
+      //   first_card_num: pickedCard[0].num,
+      //   first_forward: pickedCard[0].isForward,
+      //   second_card_num: pickedCard[1].num,
+      //   second_forward: pickedCard[1].isForward,
+      //   third_card_num: pickedCard[2].num,
+      //   third_forward: pickedCard[2].isForward,
+      // });
+     
+      setTimeout(() => {
+        setIsRun(true);
+      },500);
     }
   }, [pickedCard]);
 
@@ -128,6 +131,7 @@ const CardDeckController = (props: { setDto: any }) => {
     isShuffled,
     clickCard,
     isClicked,
+    isRun,
   };
 };
 

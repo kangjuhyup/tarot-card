@@ -1,4 +1,3 @@
-import { url } from "inspector";
 import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
@@ -49,10 +48,12 @@ export interface Cardprops {
   zIndex: number;
   isShuffling: boolean;
   cardStyle: React.CSSProperties;
+  isRun : boolean;
+  pickNum? : number;
   clickHandler: (num: number) => { isClicked: boolean; isForward: boolean };
 }
 const Card = React.memo(
-  ({ num, isForward, isShuffling, cardStyle, clickHandler }: Cardprops) => {
+  ({ num, isForward, isShuffling, cardStyle, clickHandler, isRun,pickNum }: Cardprops) => {
     const [zIdx, setZIdx] = useState(0);
     const [isPicked, setPicked] = useState(false);
     const [background, setBackground] = useState("/images/tarot_back.jpeg");
@@ -72,6 +73,13 @@ const Card = React.memo(
     useEffect(() => {
       setZIdx(zIdx);
     }, [zIdx]);
+
+ 
+    useEffect(()=> {
+      if(isPicked) {
+        console.log(pickNum)
+      }
+    },[isRun]);
 
     return (
       <CardWrapper
