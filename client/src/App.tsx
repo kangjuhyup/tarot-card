@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
-import useTarot from "./hooks/apiHook";
+import useTarot from "./hooks/tarotHooks";
 import { getResultDto } from "./hooks/dto/getResult.dto";
 import CardDeck from "./pages/cardDeck";
 import Loading from "./pages/loading";

@@ -22,7 +22,7 @@ const cardNum: number = 78;
 const angleIncrement = (Math.PI * 1) / cardNum;
 
 const CardDeckController = (props: { setDto: any }) => {
-  const {setRound} = useRoundStore();
+  const {round,setRound} = useRoundStore();
   const [isRun,setIsRun] = useState<boolean>(false);
   const [type, setType] = useState<number>(0);
   const [cards, setCards] = useState<Card[]>(() =>
@@ -85,7 +85,7 @@ const CardDeckController = (props: { setDto: any }) => {
         return newState;
       });
       setIsShuffled(true);
-      setRound(1);
+      setRound(2);
     });
   };
 
@@ -94,7 +94,7 @@ const CardDeckController = (props: { setDto: any }) => {
     setType(type);
     const shuffledCards = cards.slice().sort(() => Math.random() - 0.5);
     setCards(shuffledCards);
-    for (let i = 0; i < cardNum / 2; i++) {
+    for (let i = 0; i < 20; i++) {
       setTimeout(() => {
         setIsShuffling((prevState) => {
           const newState = [...prevState];
@@ -106,7 +106,7 @@ const CardDeckController = (props: { setDto: any }) => {
 
     setTimeout(() => {
       setShowCards();
-    }, (cardNum / 2) * 210);
+    }, (20) * 210);
   };
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const CardDeckController = (props: { setDto: any }) => {
       setTimeout(() => {
         setIsRun(true);
       },500);
-      setRound(2);
+      setRound(3);
     }
   }, [pickedCard]);
 
@@ -136,6 +136,7 @@ const CardDeckController = (props: { setDto: any }) => {
     clickCard,
     isClicked,
     isRun,
+    round,
   };
 };
 

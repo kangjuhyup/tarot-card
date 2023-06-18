@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Card from "../components/card";
 import ShuffleButton from "../components/shuffleButton";
 import CardDeckController from "./controller/cardDeck.controller";
+import LogIn from "./logIn";
 
 const CardStack = styled.div`
   position: relative;
@@ -18,8 +19,6 @@ const CardStack = styled.div`
   }
 `;
 
-
-
 const CardDeck = (props: { setDto: any }) => {
   const {
     cards,
@@ -29,6 +28,7 @@ const CardDeck = (props: { setDto: any }) => {
     isClicked,
     isShuffling,
     isRun,
+    round,
   } = CardDeckController(props);
 
   const memoizedCards = useMemo(
@@ -46,17 +46,20 @@ const CardDeck = (props: { setDto: any }) => {
             isShuffled
               ? card.isPicked
                 ? isRun
-                  ? { // isShuffled:true, card.isPicked: true, isRun: true
+                  ? {
+                      // isShuffled:true, card.isPicked: true, isRun: true
                       transform: `
-                      translate(${(card.pickNum!-1)*110}px)
-                      `
+                      translate(${(card.pickNum! - 1) * 110}px)
+                      `,
                     }
-                  : { // isShuffled:true, card.isPicked: true, isRun: false
+                  : {
+                      // isShuffled:true, card.isPicked: true, isRun: false
                       transform: `
                     translate(${card.x}px, ${card.y + 150}px)
                   `,
                     }
-                : { // isShuffled:true, card.isPicked: false
+                : {
+                    // isShuffled:true, card.isPicked: false
                     transform: `
                   translate(${card.x}px, ${card.y}px) 
                   rotate(${
@@ -64,7 +67,7 @@ const CardDeck = (props: { setDto: any }) => {
                   }deg)`,
                     transformOrigin: "50% 50%",
                   }
-              : {}// isShuffled:false
+              : {} // isShuffled:false
           }
           clickHandler={clickCard}
         />
@@ -77,8 +80,10 @@ const CardDeck = (props: { setDto: any }) => {
       {memoizedCards}
       {isClicked ? (
         <></>
+      ) : round === 0 ? (
+        <LogIn />
       ) : (
-        <ShuffleButton click={startShuffling} isClicked={isClicked}/>
+        <ShuffleButton click={startShuffling} isClicked={isClicked} />
       )}
     </CardStack>
   );
