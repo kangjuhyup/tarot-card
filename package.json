@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "docker:prod" : "docker buildx build --platform linux/amd64 -t tarot-card -f ./Dockerfile . --no-cache",
-    "docker:dev" : "docker buildx build -t tarot-card-dev -f ./Dockerfile . --no-cache",
-    "docker:run" : "docker run -p 8000:8000 tarot-card-dev:latest"
+    "docker:prod": "docker buildx build --platform linux/amd64 -t tarot-card -f ./Dockerfile . --no-cache",
+    "docker:dev": "docker buildx build -t tarot-card-dev -f ./Dockerfile . --no-cache",
+    "docker:run": "docker run -p 8000:8000 tarot-card-dev:latest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/kangjuhyup/tarot-card/issues"
   },
-  "homepage": "https://github.com/kangjuhyup/tarot-card#readme"
+  "homepage": "https://github.com/kangjuhyup/tarot-card#readme",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "universal-cookie": "^4.0.4"
+  }
 }
