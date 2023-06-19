@@ -45,6 +45,7 @@ const CardDeckController = (props: { setDto: any }) => {
   const [pickedCard, setPickedCard] = useState<PickedCard[]>([]);
 
   const clickCard = (num: number) => {
+    if(!isShuffled) return { isClicked: false, isForward: false};
     if (pickedCard.length < 3) {
       setCards((prevState) => {
         const newState = [...prevState];
