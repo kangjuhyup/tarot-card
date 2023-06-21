@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import useTarot from "./hooks/tarotHooks";
 import { getResultDto } from "./hooks/dto/getResult.dto";
-import CardDeck from "./pages/cardDeck";
+import CardDeck from "./components/cardDeck";
 import Loading from "./pages/loading";
-import Result from "./pages/result";
+import Result from "./components/result";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import TarotCardPage from "./pages/tarotCard";
+import SharedResultPage from "./pages/sharedResult";
 
 interface Star {
   x: number;
@@ -13,9 +15,6 @@ interface Star {
 }
 
 const App = () => {
-  const { getResult, loading, error } = useTarot();
-  const [dto, setDto] = useState<getResultDto>();
-  const [ tarot_result, setResult ] = useState({ success : false, result : ''});
   const [stars, setStars] = useState<Star[]>([
     {
       x: Math.random() * Math.max(window.innerWidth),
@@ -24,22 +23,10 @@ const App = () => {
     },
   ]);
   useEffect(() => {
-    console.log(process.env.REACT_APP_TAROT_SERVER)
     genStars();
   }, []);
 
-  useEffect(() => {
-    console.log('tarot_result : ',tarot_result)
-  },[tarot_result])
 
-  const setCards = async (value: getResultDto) => {
-    const result = await getResult(value);
-    console.log(result);
-    if(result.success) setResult(result)
-    else console.log('result fail')
-  };
-
-  
 
   const genStars = () => {
     const rndX = () => Math.random() * Math.max(window.innerWidth);
@@ -63,20 +50,32 @@ const App = () => {
         : stars.map((star, index) => {
             return (
               <svg key={index} className="sky">
-                <circle key={index} cx={star.x} cy={star.y} r={star.r} className="star" />{" "}
+                <circle
+                  key={index}
+                  cx={star.x}
+                  cy={star.y}
+                  r={star.r}
+                  className="star"
+                />{" "}
               </svg>
             );
           })}
 
       <div className="App">
-        <div className="topHalf">
-          <CardDeck setDto={setCards} />
-        </div>
-        <div className="bottomHalf">
-          <Result success={tarot_result.success} result={tarot_result.result}/>
-        </div>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <TarotCardPage/>
+              }
+            />
+            <Route path="/shared" element={
+              <SharedResultPage/>
+            } />
+          </Routes>
+        </BrowserRouter>
       </div>
-      {loading ? <Loading/> : <></>}
     </div>
   );
 };
