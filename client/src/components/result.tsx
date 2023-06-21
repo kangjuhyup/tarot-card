@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ResultController, { ResultProps } from "./controller/result.controller";
+import ResultController, { ResultProps } from "./contorller/result.controller";
 
 const ResultDiv = styled.div`
   position: relative;

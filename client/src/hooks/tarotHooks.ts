@@ -24,7 +24,28 @@ const useTarot = () => {
       } else if (response.status === 613) {
         return { success: false };
       } else {
-        throw Error("failed call getPolicy API");
+        throw Error("failed call getResult API");
+      }
+    } catch (error: any) {
+      setError(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getSharedResult = async (uuid: string) => {
+    setLoading(true);
+    try {
+      const url = `${process.env.REACT_APP_TAROT_SERVER}/tarot/sharedResult?uuid=${uuid}`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const jsonData = await response.json();
+        return jsonData;
+      } else if (response.status === 613) {
+        return { success: false };
+      } else {
+        throw Error("failed call getSharedResult API");
       }
     } catch (error: any) {
       setError(error);
@@ -38,6 +59,7 @@ const useTarot = () => {
     loading,
     error,
     getResult,
+    getSharedResult,
   };
 };
 

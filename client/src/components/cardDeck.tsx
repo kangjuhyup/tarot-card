@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import styled from "styled-components";
-import Card from "../components/card";
-import ShuffleButton from "../components/shuffleButton";
-import CardDeckController from "./controller/cardDeck.controller";
-import LogIn from "./logIn";
+import Card from "./card";
+import ShuffleButton from "./shuffleButton";
+import CardDeckController from "./contorller/cardDeck.controller";
+import LogIn from "../pages/logIn";
 
 const CardStack = styled.div`
   position: relative;
