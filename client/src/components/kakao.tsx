@@ -1,10 +1,10 @@
 import KakaoLogin from "react-kakao-login";
 import useAuth from "../hooks/authHooks";
-import useRoundStore from "../store/round";
+import useLogInStore from "../store/logIn";
 
 const Kakao = () => {
     const key = process.env.REACT_APP_KAKAO_KEY?.toString() || "abc"
-    const {setRound} = useRoundStore();
+    const {setLogIn} = useLogInStore();
     const { authKakao, loading } = useAuth()
     const kakaoOnSuccess = async (data:any) => {
         const idToken = data.response.access_token
@@ -12,10 +12,8 @@ const Kakao = () => {
             const result = await authKakao({access_token:idToken}).catch((error) => {
                 console.log('authKakaoError : ',error);
             });
-            setRound(1);
-            console.log(result);
+            if(result) setLogIn(true);
         }
-        console.log(idToken)
     }
     const kakaoOnFail = (error:any) => {
         console.log(error);
@@ -24,7 +22,6 @@ const Kakao = () => {
     return (
         <>
             <KakaoLogin
-                
                 token={key}
                 onSuccess={kakaoOnSuccess}
                 onFail={kakaoOnFail}

@@ -19,7 +19,7 @@ const CardStack = styled.div`
   }
 `;
 
-const CardDeck = (props: { setDto: any }) => {
+const CardDeck = (props: { setDto: any, setMessage:any }) => {
   const {
     cards,
     startShuffling,
@@ -28,7 +28,8 @@ const CardDeck = (props: { setDto: any }) => {
     isClicked,
     isShuffling,
     isRun,
-    round,
+    logIn,
+    setLogIn
   } = CardDeckController(props);
 
   const memoizedCards = useMemo(
@@ -80,7 +81,7 @@ const CardDeck = (props: { setDto: any }) => {
       {memoizedCards}
       {isClicked ? (
         <></>
-      ) : round === 0 ? (
+      ) : !logIn ? (
         <LogIn />
       ) : (
         <ShuffleButton click={startShuffling} isClicked={isClicked} />

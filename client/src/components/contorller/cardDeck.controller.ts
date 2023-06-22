@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import useRoundStore from "../../store/round";
+import useLogInStore from "../../store/logIn";
 
 interface PickedCard {
   num: number;
@@ -21,8 +21,10 @@ interface Card {
 const cardNum: number = 78;
 const angleIncrement = (Math.PI * 1) / cardNum;
 
-const CardDeckController = (props: { setDto: any }) => {
-  const {round,setRound} = useRoundStore();
+const CardDeckController = (props: { setDto: any , setMessage:any }) => {
+
+  const {logIn,setLogIn} = useLogInStore();
+
   const [isRun,setIsRun] = useState<boolean>(false);
   const [type, setType] = useState<number>(0);
   const [cards, setCards] = useState<Card[]>(() =>
@@ -86,7 +88,7 @@ const CardDeckController = (props: { setDto: any }) => {
         return newState;
       });
       setIsShuffled(true);
-      setRound(2);
+      props.setMessage('3장의 카드를 선택해주세요.');
     });
   };
 
@@ -125,7 +127,6 @@ const CardDeckController = (props: { setDto: any }) => {
       setTimeout(() => {
         setIsRun(true);
       },500);
-      setRound(3);
     }
   }, [pickedCard]);
 
@@ -137,7 +138,8 @@ const CardDeckController = (props: { setDto: any }) => {
     clickCard,
     isClicked,
     isRun,
-    round,
+    logIn,
+    setLogIn,
   };
 };
 

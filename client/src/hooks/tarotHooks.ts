@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { useQuery } from "react-query";
 import Cookies from "universal-cookie";
-import { authKakaoDto } from "./dto/authKakao.dto";
 import { getResultDto } from "./dto/getResult.dto";
 
 const useTarot = () => {
@@ -33,8 +33,18 @@ const useTarot = () => {
       setLoading(false);
     }
   };
-
-  const getSharedResult = async (uuid: string) => {
+  const useSharedResultQuery = (uuid:string|null) => {
+    return useQuery(["getSharedResult", uuid], async () => {
+      if (uuid) {
+        return await getSharedResult(uuid);
+      } else {
+        return null;
+      }
+    });
+  };
+  
+  const getSharedResult = async (uuid?: string) => {
+    if(!uuid) return { success: false };
     setLoading(true);
     try {
       const url = `${process.env.REACT_APP_TAROT_SERVER}/tarot/sharedResult?uuid=${uuid}`;
@@ -59,7 +69,7 @@ const useTarot = () => {
     loading,
     error,
     getResult,
-    getSharedResult,
+    useSharedResultQuery,
   };
 };
 

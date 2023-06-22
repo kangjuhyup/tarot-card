@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { getResultDto } from "./hooks/dto/getResult.dto";
-import CardDeck from "./components/cardDeck";
-import Loading from "./pages/loading";
-import Result from "./components/result";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import TarotCardPage from "./pages/tarotCard";
 import SharedResultPage from "./pages/sharedResult";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 interface Star {
   x: number;
@@ -43,7 +40,11 @@ const App = () => {
       }, 1000);
     }
   };
+
+  const queryClient = new QueryClient();
   return (
+    <>
+    <QueryClientProvider client={queryClient} >
     <div className="backSky">
       {!stars
         ? ``
@@ -76,7 +77,10 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </div>
+      <img style={{position:'fixed', bottom:'0px', width:'400px', right:'10px'}} src="/images/fortune.png"/>
     </div>
+    </QueryClientProvider>
+    </>
   );
 };
 

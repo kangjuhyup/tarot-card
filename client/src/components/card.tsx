@@ -23,7 +23,7 @@ const pickAniation = keyframes`
   }
 `;
 
-const CardWrapper = styled.div`
+export const CardWrapper = styled.div`
   position: absolute;
   top: 50px;
   width: 100px;
